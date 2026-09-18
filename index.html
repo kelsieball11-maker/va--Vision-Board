@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Assisting Vision Board</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --surface-0: #faf8f6;
+      --surface-1: #fdf9f7;
+      --surface-2: #fffcfa;
+      --text-primary: #2d2420;
+      --text-secondary: #7a6f6a;
+      --border: rgba(201, 164, 152, 0.2);
+      --blush: #f5d5d0;
+      --lavender: #e8d5f2;
+      --mint: #d4ede8;
+      --peach: #fde4d1;
+      --accent1: #d9a5a0;
+      --accent2: #c9a4d6;
+      --accent3: #99d4c9;
+      --accent4: #f5b89e;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface-0: #2a2420;
+        --surface-1: #3a3530;
+        --surface-2: #44403c;
+        --text-primary: #f5f1ed;
+        --text-secondary: #d4ccc4;
+        --border: rgba(201, 164, 152, 0.3);
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+      background: linear-gradient(180deg, var(--surface-0) 0%, var(--surface-1) 100%);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .container {
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #f5d5d0 0%, #e8d5f2 50%, #d4ede8 100%);
+      padding: 3rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: visible;
+    }
+
+    .hero::before {
+      content: '✨';
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      font-size: 48px;
+      opacity: 0.3;
+      transform: rotate(-15deg);
+    }
+
+    .hero::after {
+      content: '✨';
+      position: absolute;
+      bottom: 30px;
+      left: 30px;
+      font-size: 36px;
+      opacity: 0.25;
+      transform: rotate(25deg);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .hero-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: #6b5c54;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-title {
+      font-size: 48px;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #3d3530;
+      line-height: 1.1;
+      font-style: italic;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      color: #5a4f48;
+      font-weight: 400;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 3rem 1.5rem;
+      max-width: 950px;
+      margin: 0 auto;
+    }
+
+    .sections-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .section {
+      position: relative;
+    }
+
+    /* Section 1: Want - Blush background, left-aligned rotation */
+    .section:nth-child(1) {
+      transform: rotate(-2deg);
+    }
+
+    .section:nth-child(1) .section-card {
+      background: var(--blush);
+      border: 2px solid rgba(217, 165, 160, 0.5);
+      box-shadow: 6px 8px 0 rgba(217, 165, 160, 0.2);
+    }
+
+    .section:nth-child(1) .section-icon {
+      background: linear-gradient(135deg, #f5b89e, #fde4d1);
+    }
+
+    /* Section 2: Sticky - Lavender background, right-aligned rotation */
+    .section:nth-child(2) {
+      transform: rotate(1.5deg);
+      margin-top: 2rem;
+    }
+
+    .section:nth-child(2) .section-card {
+      background: var(--lavender);
+      border: 2px solid rgba(201, 164, 214, 0.5);
+      box-shadow: -6px 8px 0 rgba(201, 164, 214, 0.2);
+    }
+
+    .section:nth-child(2) .section-icon {
+      background: linear-gradient(135deg, #d9a5a0, #f5b89e);
+    }
+
+    /* Section 3: Success - Mint background, full width but rotated */
+    .section:nth-child(3) {
+      grid-column: 1 / -1;
+      transform: rotate(-1deg);
+    }
+
+    .section:nth-child(3) .section-card {
+      background: var(--mint);
+      border: 2px solid rgba(153, 212, 201, 0.5);
+      box-shadow: 6px 8px 0 rgba(153, 212, 201, 0.2);
+    }
+
+    .section:nth-child(3) .section-icon {
+      background: linear-gradient(135deg, #c9a4d6, #d9a5a0);
+    }
+
+    .section-card {
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .section-card::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.3;
+    }
+
+    .section-card::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 15%;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.2;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+      transform: rotate(-5deg);
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0 0 0.25rem 0;
+      color: var(--text-primary);
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .textarea-wrapper {
+      background: rgba(255, 255, 255, 0.6);
+      border: none;
+      border-radius: 12px;
+      padding: 0;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 1.25rem;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-primary);
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    textarea::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.5;
+    }
+
+    /* Confidence Section */
+    .confidence-section {
+      background: var(--peach);
+      border: 2px solid rgba(245, 184, 158, 0.5);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: -6px 8px 0 rgba(245, 184, 158, 0.2);
+      transform: rotate(1deg);
+      position: relative;
+    }
+
+    .confidence-section::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 20%;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(245, 184, 158, 0.4);
+    }
+
+    .confidence-section::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      right: 15%;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(245, 184, 158, 0.3);
+    }
+
+    .confidence-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.25rem;
+    }
+
+    .confidence-header h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+      color: var(--text-primary);
+    }
+
+    .confidence-description {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .confidence-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 8px;
+      background: linear-gradient(90deg, var(--lavender) 0%, var(--mint) 100%);
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      accent-color: #d9a5a0;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #d9a5a0;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(217, 165, 160, 0.4);
+      border: 3px solid var(--peach);
+      transform: rotate(-15deg);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #d9a5a0;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(217, 165, 160, 0.4);
+      border: 3px solid var(--peach);
+    }
+
+    .confidence-output {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .confidence-number {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .confidence-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(217, 165, 160, 0.15), rgba(201, 164, 214, 0.15));
+      border: 2px dashed rgba(201, 164, 152, 0.4);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      transform: rotate(-0.5deg);
+    }
+
+    /* Toggle Button */
+    .toggle-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #d9a5a0, #c9a4d6);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(217, 165, 160, 0.4);
+      transition: all 0.3s;
+      z-index: 100;
+    }
+
+    .toggle-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(217, 165, 160, 0.5);
+    }
+
+    /* Review Mode */
+    .review-mode {
+      display: none;
+    }
+
+    .review-mode.active {
+      display: block;
+    }
+
+    .edit-mode.hidden {
+      display: none !important;
+    }
+
+    .review-container {
+      background: linear-gradient(180deg, var(--surface-0) 0%, var(--surface-1) 100%);
+      padding: 3rem 1.5rem;
+      min-height: 100vh;
+    }
+
+    .review-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .review-header h1 {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .review-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .review-items {
+      max-width: 800px;
+      margin: 0 auto;
+      display: grid;
+      gap: 2rem;
+    }
+
+    .review-item {
+      border-radius: 20px;
+      padding: 2.5rem;
+      border: 2px solid rgba(201, 164, 152, 0.3);
+      background: var(--surface-1);
+    }
+
+    .review-item:nth-child(1) {
+      background: rgba(245, 213, 208, 0.4);
+      border-color: rgba(217, 165, 160, 0.5);
+    }
+
+    .review-item:nth-child(2) {
+      background: rgba(232, 213, 242, 0.4);
+      border-color: rgba(201, 164, 214, 0.5);
+    }
+
+    .review-item:nth-child(3) {
+      background: rgba(212, 237, 232, 0.4);
+      border-color: rgba(153, 212, 201, 0.5);
+    }
+
+    .review-item:nth-child(4) {
+      background: rgba(253, 228, 209, 0.4);
+      border-color: rgba(245, 184, 158, 0.5);
+    }
+
+    .review-item-icon {
+      font-size: 32px;
+      margin-bottom: 0.75rem;
+    }
+
+    .review-item-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .review-item-subtitle {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    .review-item-content {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .review-item-empty {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      right: 15%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent1);
+      opacity: 0.4;
+    }
+
+    .cta-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .cta-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, #d9a5a0, #c9a4d6);
+      color: #fff;
+      border: none;
+      padding: 0.85rem 1.75rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(217, 165, 160, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    .cta-button:hover {
+      transform: scale(1.08) rotate(1deg);
+      box-shadow: 0 6px 16px rgba(217, 165, 160, 0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .sections-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .section:nth-child(2) {
+        margin-top: 0;
+      }
+
+      .main-content {
+        padding: 1.5rem 1rem;
+      }
+
+      .section-card {
+        padding: 1.5rem;
+      }
+
+      .confidence-section {
+        padding: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-button" onclick="toggleReviewMode()">📋 View Responses</button>
+  
+  <div class="edit-mode" id="editMode">
+    <!-- Hero Header -->
+    <div class="hero">
+      <div class="hero-content">
+        <p class="hero-label">✨ Your Journey Begins ✨</p>
+        <h1 class="hero-title">Virtual Assisting Vision</h1>
+        <p class="hero-subtitle">Clarity, intention, and a roadmap for your mentoring call</p>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      
+      <div class="sections-grid">
+        
+        <!-- What I Want -->
+        <div class="section">
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-icon">✨</div>
+              <div style="flex: 1;">
+                <h2 class="section-title">What Do I Want?</h2>
+                <p class="section-subtitle">Why am I pursuing virtual assisting?</p>
+              </div>
+            </div>
+            
+            <div class="textarea-wrapper">
+              <textarea id="want" placeholder="What draws you to this work? Flexibility? Financial independence? The ability to build something? Be specific and honest..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- What Feels Sticky -->
+        <div class="section">
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-icon">⚡</div>
+              <div style="flex: 1;">
+                <h2 class="section-title">What Feels Sticky?</h2>
+                <p class="section-subtitle">What's holding you back or making you nervous?</p>
+              </div>
+            </div>
+            
+            <div class="textarea-wrapper">
+              <textarea id="sticky" placeholder="Imposter syndrome? Not knowing where to find clients? Fear of rejection? Uncertainty about pricing? Name it all..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Success Definition -->
+        <div class="section">
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-icon">🎯</div>
+              <div style="flex: 1;">
+                <h2 class="section-title">What Does Success Look Like?</h2>
+                <p class="section-subtitle">Define your win: What would make you leave that first call feeling great?</p>
+              </div>
+            </div>
+            
+            <div class="textarea-wrapper">
+              <textarea id="success" placeholder="A clear action plan? Understanding your strengths? Knowing your first three steps? Feeling confident and supported? Paint the picture..."></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Confidence Section -->
+      <div class="confidence-section">
+        <div class="confidence-header">
+          <span style="font-size: 20px;">📊</span>
+          <h3>Confidence Baseline</h3>
+        </div>
+        
+        <p class="confidence-description">Where are you starting? (This is just for you—no judgment, just a reference point.)</p>
+        
+        <div class="confidence-container">
+          <input type="range" id="confidence" min="1" max="10" value="5">
+          <div class="confidence-output">
+            <div class="confidence-number" id="confidence-number">5</div>
+            <div class="confidence-label">out of 10</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Section -->
+      <div class="cta-section">
+        <p class="cta-title">📌 Your Vision is Safe Here</p>
+        <p class="cta-text">Your responses are saved automatically in your browser. Review them before your mentor call to keep your vision fresh and clear.</p>
+        <button class="cta-button" onclick="location.reload()">Refresh & Save</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Review Mode -->
+  <div class="review-mode" id="reviewMode">
+    <div class="review-container">
+      <div class="review-header">
+        <h1>✨ Your Vision</h1>
+        <p>Your responses for your VA agency mentoring call</p>
+      </div>
+
+      <div class="review-items">
+        <!-- What I Want -->
+        <div class="review-item">
+          <div class="review-item-icon">✨</div>
+          <h2 class="review-item-title">What Do I Want?</h2>
+          <p class="review-item-subtitle">Why am I pursuing virtual assisting?</p>
+          <div class="review-item-content" id="review-want">
+            <p class="review-item-empty">No response yet</p>
+          </div>
+        </div>
+
+        <!-- What Feels Sticky -->
+        <div class="review-item">
+          <div class="review-item-icon">⚡</div>
+          <h2 class="review-item-title">What Feels Sticky?</h2>
+          <p class="review-item-subtitle">What's holding you back or making you nervous?</p>
+          <div class="review-item-content" id="review-sticky">
+            <p class="review-item-empty">No response yet</p>
+          </div>
+        </div>
+
+        <!-- Success Definition -->
+        <div class="review-item">
+          <div class="review-item-icon">🎯</div>
+          <h2 class="review-item-title">What Does Success Look Like?</h2>
+          <p class="review-item-subtitle">Define your win: What would make you leave that call feeling great?</p>
+          <div class="review-item-content" id="review-success">
+            <p class="review-item-empty">No response yet</p>
+          </div>
+        </div>
+
+        <!-- Confidence Baseline -->
+        <div class="review-item">
+          <div class="review-item-icon">📊</div>
+          <h2 class="review-item-title">Confidence Baseline</h2>
+          <p class="review-item-subtitle">Where are you starting?</p>
+          <div class="review-item-content" id="review-confidence">
+            <p class="review-item-empty">No baseline set</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleReviewMode() {
+      const editMode = document.getElementById('editMode');
+      const reviewMode = document.getElementById('reviewMode');
+      const toggleButton = document.querySelector('.toggle-button');
+      
+      const isReviewActive = reviewMode.classList.contains('active');
+      
+      if (isReviewActive) {
+        // Switch to edit mode
+        editMode.classList.remove('hidden');
+        reviewMode.classList.remove('active');
+        toggleButton.textContent = '📋 View Responses';
+        window.scrollTo(0, 0);
+      } else {
+        // Switch to review mode
+        editMode.classList.add('hidden');
+        reviewMode.classList.add('active');
+        toggleButton.textContent = '✏️ Edit Responses';
+        populateReviewMode();
+        window.scrollTo(0, 0);
+      }
+    }
+
+    function populateReviewMode() {
+      const want = localStorage.getItem('va-want') || '';
+      const sticky = localStorage.getItem('va-sticky') || '';
+      const success = localStorage.getItem('va-success') || '';
+      const confidence = localStorage.getItem('va-confidence') || '5';
+
+      // Update review items
+      document.getElementById('review-want').innerHTML = want ? `<p>${want}</p>` : '<p class="review-item-empty">No response yet</p>';
+      document.getElementById('review-sticky').innerHTML = sticky ? `<p>${sticky}</p>` : '<p class="review-item-empty">No response yet</p>';
+      document.getElementById('review-success').innerHTML = success ? `<p>${success}</p>` : '<p class="review-item-empty">No response yet</p>';
+      document.getElementById('review-confidence').innerHTML = `<p><strong>Confidence Level: ${confidence}/10</strong></p>`;
+    }
+
+    const confidenceSlider = document.getElementById('confidence');
+    const confidenceNumber = document.getElementById('confidence-number');
+    
+    confidenceSlider.addEventListener('input', (e) => {
+      confidenceNumber.textContent = e.target.value;
+      localStorage.setItem('va-confidence', e.target.value);
+    });
+
+    // Auto-save to local storage
+    ['want', 'sticky', 'success'].forEach(id => {
+      const textarea = document.getElementById(id);
+      textarea.addEventListener('input', () => {
+        localStorage.setItem('va-' + id, textarea.value);
+      });
+      
+      // Restore from storage
+      const saved = localStorage.getItem('va-' + id);
+      if (saved) textarea.value = saved;
+    });
+
+    // Restore confidence level
+    const savedConfidence = localStorage.getItem('va-confidence');
+    if (savedConfidence) {
+      confidenceSlider.value = savedConfidence;
+      confidenceNumber.textContent = savedConfidence;
+    }
+  </script>
+</body>
+</html>
